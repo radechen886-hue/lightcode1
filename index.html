@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>探究與實作：光的摩斯密碼（純物理光學濾光版）</title>
+    <title>光的摩斯密碼：雙人解密探究實驗室</title>
     <style>
         :root {
             --primary: #2c3e50;
             --accent: #e67e22;
+            --success: #27ae60;
             --bg: #f8f9fa;
             --card-bg: #ffffff;
         }
@@ -24,7 +25,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 850px;
             margin: 0 auto;
             padding: 20px;
             box-sizing: border-box;
@@ -49,83 +50,89 @@
             padding: 25px;
             margin-bottom: 25px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            border-left: 6px solid #3498db;
+            border-top: 5px solid #2980b9;
         }
 
-        section.experiment-section { border-left-color: var(--accent); }
-        section.quiz-section { border-left-color: #2ecc71; }
+        section.experiment-section { border-top-color: var(--accent); }
+        section.quiz-section { border-top-color: var(--success); }
 
-        h2 {
-            margin-top: 0;
-            color: var(--primary);
-            font-size: 1.4rem;
-            border-bottom: 2px solid #edf2f7;
-            padding-bottom: 10px;
-        }
-
-        /* 老師控制面板 */
-        .admin-panel {
-            background-color: #f1f2f6;
-            border: 1px dashed #cbd5e0;
-            border-radius: 8px;
-            padding: 12px 15px;
-            margin-bottom: 20px;
-        }
-        .admin-toggle {
-            cursor: pointer;
-            color: var(--primary);
-            font-weight: bold;
+        .section-title-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.95rem;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
         }
-        .admin-content {
-            display: none;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #cbd5e0;
+
+        h2 {
+            margin: 0;
+            color: var(--primary);
+            font-size: 1.4rem;
         }
-        .admin-row {
+
+        .btn-reopen {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        /* 頂部操作自訂面板 */
+        .setup-panel {
+            background-color: #f1f2f6;
+            border: 2px solid #cbd5e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .setup-row {
             display: flex;
             gap: 15px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             align-items: center;
             flex-wrap: wrap;
         }
-        .admin-row label { font-size: 0.9rem; font-weight: bold; }
-        .admin-input {
-            width: 80px;
-            padding: 4px;
+
+        .setup-row label { font-weight: bold; font-size: 1rem; color: var(--primary); }
+
+        .input-pwd {
+            width: 140px;
+            padding: 8px;
+            font-size: 1.2rem;
             text-align: center;
-            font-size: 1rem;
             font-weight: bold;
-            border: 1px solid #95a5a6;
-            border-radius: 4px;
-        }
-        .btn-apply {
-            background-color: #34495e;
-            color: white;
-            border: none;
-            padding: 5px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.85rem;
-        }
-        .btn-default-matrix {
-            background-color: #e67e22;
-            color: white;
-            border: none;
-            padding: 5px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.85rem;
-            margin-left: 10px;
+            border: 2px solid #b2bec3;
+            border-radius: 6px;
+            letter-spacing: 3px;
         }
 
-        /* 實驗區 */
+        .select-glass {
+            padding: 8px 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            border: 2px solid #b2bec3;
+        }
+
+        .btn-action {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: background 0.2s;
+        }
+        .btn-rand { background-color: #7f8c8d; color: white; }
+        .btn-gen { background-color: #34495e; color: white; }
+        .btn-lock { background-color: #d35400; color: white; width: 100%; padding: 10px; margin-top: 5px; font-size: 1rem;}
+
+        /* 實驗畫布區 */
         .experiment-zone {
             position: relative;
             background-color: #ffffff;
@@ -143,13 +150,13 @@
             align-items: center;
             width: 100%;
             height: 100%;
-            gap: 50px;
+            gap: 35px;
         }
 
-        .digit-box { position: relative; width: 70px; height: 120px; }
+        .digit-box { position: relative; width: 60px; height: 110px; }
         .segment { position: absolute; border-radius: 4px; transition: background-color 0.1s, opacity 0.1s; background-color: #f1f2f6; }
         
-        /* 線段外觀顏色 */
+        /* 物理線段顯色樣式 */
         .color-r { background-color: #ff3b30; }
         .color-g { background-color: #4cd964; }
         .color-b { background-color: #007aff; }
@@ -157,15 +164,15 @@
         .color-w { background-color: #fcfcfc; opacity: 0; } 
 
         /* 七段佈局精確座標 */
-        .seg-a { top: 0; left: 10px; width: 50px; height: 10px; }
-        .seg-b { top: 10px; right: 0; width: 10px; height: 45px; }
-        .seg-c { top: 65px; right: 0; width: 10px; height: 45px; }
-        .seg-d { bottom: 0; left: 10px; width: 50px; height: 10px; }
-        .seg-e { top: 65px; left: 0; width: 10px; height: 45px; }
-        .seg-f { top: 10px; left: 0; width: 10px; height: 45px; }
-        .seg-g { top: 55px; left: 10px; width: 50px; height: 10px; }
+        .seg-a { top: 0; left: 8px; width: 44px; height: 8px; }
+        .seg-b { top: 8px; right: 0; width: 8px; height: 42px; }
+        .seg-c { top: 60px; right: 0; width: 8px; height: 42px; }
+        .seg-d { bottom: 0; left: 8px; width: 44px; height: 8px; }
+        .seg-e { top: 60px; left: 0; width: 8px; height: 42px; }
+        .seg-f { top: 8px; left: 0; width: 8px; height: 42px; }
+        .seg-g { top: 50px; left: 8px; width: 44px; height: 8px; }
 
-        /* 局部玻璃紙 */
+        /* 手持玻璃紙 */
         .filter-glass {
             position: absolute;
             top: 20px;
@@ -193,21 +200,9 @@
         .filter-green { background-color: rgba(0, 220, 0, 0.4); }
         .filter-blue { background-color: rgba(0, 100, 255, 0.45); }
 
-        .controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-        .btn {
-            padding: 10px 16px;
-            border: none;
-            border-radius: 20px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .btn-red { background-color: #ff3b30; color: white; }
-        .btn-green { background-color: #4cd964; color: white; }
-        .btn-blue { background-color: #007aff; color: white; }
+        .glass-controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
 
-        /* 題目區 */
+        /* 題目與填答區 */
         .quiz-item {
             background-color: #fcfcfc;
             border: 1px solid #e2e8f0;
@@ -237,7 +232,7 @@
             border: 1px solid #edf2f7;
             border-radius: 8px;
         }
-        .ans-field label { font-weight: bold; width: 180px; }
+        .ans-field label { font-weight: bold; width: 220px; }
         .input-code {
             width: 120px;
             padding: 6px;
@@ -282,41 +277,38 @@
 <div class="container">
     <header>
         <h1>光的摩斯密碼</h1>
-        <p>探究與實作數位實驗室</p>
+        <p>探究與實作：雙人對戰逆向解密實驗室</p>
     </header>
 
-    <section>
-        <h2>一、 前導知識：濾光片原理</h2>
-        <p>當我們把彩色線條畫在<b>白紙</b>上，並蓋上<b>有色玻璃紙（濾光片）</b>時，眼睛看到的顏色會發生神奇的變化：</p>
-        <ul>
-            <li><b>同色隱形：</b>紅色玻璃紙只讓紅光通過。白紙反射的紅光與紅色線段反射的紅光強度相同，因此<b>紅色線段會融入背景中，看起來消失了</b>。</li>
-            <li><b>異色變黑：</b>綠色光、藍色光無法通過紅色玻璃紙，光線被吸收，因此<b>綠色與藍色線段看起來會變成黑色</b>。</li>
-            <li><b>黑色不變：</b>黑色線段不反射任何光，不論透過什麼玻璃紙看，<b>永遠都是黑色</b>。</li>
-        </ul>
-    </section>
-
     <section class="experiment-section">
-        <h2>二、 動態模擬實驗區</h2>
-        <p>請先<b>選擇玻璃紙顏色</b>，並在平板上<b>用手指拖曳玻璃紙</b>至下方字型上。進行局部掃描，觀察線段的真實光學過濾現象並記錄秘密代碼！</p>
+        <div class="section-title-container">
+            <h2>一、 動態模擬實驗區</h2>
+            <div class="btn-reopen" onclick="showSetupPanel()">⚙️ 重新設定密碼</div>
+        </div>
+        <p><b>遊戲玩法：</b>請出題同學先在下方設定好密碼與完美世界，然後點擊「鎖定並隱藏」。接下來就可以把平板交給下一位解密同學，讓他利用玻璃紙找出你藏起來的密碼！</p>
 
-        <div class="admin-panel">
-            <div class="admin-toggle" onclick="toggleAdmin()">⚙️ 教學控制項：自訂實驗數字密碼（點擊開啟） <span>▼</span></div>
-            <div class="admin-content" id="adminContent">
-                <div class="admin-row">
-                    <label>🔴 紅色世界密碼：</label> <input type="text" id="cfgRed" class="admin-input" value="468" maxlength="3">
-                    <label>🟢 綠色世界密碼：</label> <input type="text" id="cfgGreen" class="admin-input" value="239" maxlength="3">
-                    <label>🔵 藍色世界密碼：</label> <input type="text" id="cfgBlue" class="admin-input" value="602" maxlength="3">
-                    <button class="btn-apply" onclick="applyCustomCodes()">更新自訂密碼</button>
-                    <button class="btn-default-matrix" onclick="resetToTeacherMatrix()">還原初始</button>
-                </div>
-                <small style="color:#7f8c8d;">* 目前已回歸【100% 純物理濾光】。若自訂某些衝突數字，遮光後會呈現真實物理限制的殘缺形狀，這正是引導學生討論「光學原理限制」的絕佳探究題材！</small>
+        <div class="setup-panel" id="setupPanel">
+            <div class="setup-row">
+                <label>1. 選擇預定完美的玻璃紙世界：</label>
+                <select id="targetGlassType" class="select-glass">
+                    <option value="red">🔴 紅色玻璃紙世界</option>
+                    <option value="green">🟢 綠色玻璃紙世界</option>
+                    <option value="blue">🔵 藍色玻璃紙世界</option>
+                </select>
             </div>
+            <div class="setup-row">
+                <label>2. 設定四位數秘密代碼：</label>
+                <input type="text" id="inputDigits" class="input-pwd" value="1234" maxlength="4">
+                <button class="btn-action btn-rand" onclick="generateRandomDigits()">🎲 隨機數</button>
+                <button class="btn-action btn-gen" onclick="applyCustomSetup()">✨ 預覽彩色圖案</button>
+            </div>
+            <button class="btn-action btn-lock" onclick="lockAndHidePanel()">🔒 鎖定並隱藏面板（換下一位同學玩）</button>
         </div>
 
-        <div class="controls">
-            <button class="btn btn-red" onclick="setGlassColor('red')">切換：紅色玻璃紙</button>
-            <button class="btn btn-green" onclick="setGlassColor('green')">切換：綠色玻璃紙</button>
-            <button class="btn btn-blue" onclick="setGlassColor('blue')">切換：藍色玻璃紙</button>
+        <div class="glass-controls">
+            <button class="btn btn-red" onclick="setGlassColor('red')">手持：紅色玻璃紙</button>
+            <button class="btn btn-green" onclick="setGlassColor('green')">手持：綠色玻璃紙</button>
+            <button class="btn btn-blue" onclick="setGlassColor('blue')">手持：藍色玻璃紙</button>
         </div>
 
         <div class="experiment-zone" id="expZone">
@@ -330,39 +322,37 @@
         </div>
     </section>
 
+    <section>
+        <h2>二、 原理知識講解：同色消失、異色變黑</h2>
+        <p>當我們透過有色玻璃紙（濾光片）觀看彩色線條時，白紙與線條反射的光線在通過玻璃紙時會遵循嚴格的物理過濾原則：</p>
+        <ul>
+            <li><b>同色消失：</b>玻璃紙能讓同色光通過。例如紅色玻璃紙只讓紅光通過，此時白紙反射的紅光與紅色線段反射的紅光都能通過，兩者亮度相同，因此<b>紅色線段反射的影像會與背景融為一體而「消失」</b>。</li>
+            <li><b>異色變黑：</b>其他顏色的光則無法通過該玻璃紙。例如綠色和藍色的光會被紅色玻璃紙完全吸收、無法通過，沒有光線進入眼睛，因此<b>綠色與藍色的線段看起來會呈現「黑色」</b>。</li>
+            <li><b>三者都不需要：</b>如果某個線段位置在任何密碼中都不需要點亮，則保持不塗顏色的狀態，<b>呈現白色的紙張底色</b>。</li>
+        </ul>
+    </section>
+
     <section class="quiz-section">
         <h2>三、 探究觀念與實驗成果填答</h2>
         
         <div class="quiz-item">
-            <p>Q1. 蓋上「綠色玻璃紙」時，以下哪一種顏色的線段會因為融入背景而「隱形不見」？</p>
+            <p>Q1. 根據「同色消失、異色變黑」原理，當你使用綠色玻璃紙覆蓋在彩色字體上時，什麼顏色的字會隱形，而其他顏色的字會變黑？</p>
             <div class="options">
-                <label><input type="radio" name="q1" value="red"> 紅色線段</label>
-                <label><input type="radio" name="q1" value="green"> 綠色線段</label>
-                <label><input type="radio" name="q1" value="black"> 黑色線段</label>
-            </div>
-        </div>
-        <div class="quiz-item">
-            <p>Q2. 承上題，此時原本紙上的「紅色」與「藍色」線段會變成什麼顏色？</p>
-            <div class="options">
-                <label><input type="radio" name="q2" value="white"> 白色</label>
-                <label><input type="radio" name="q2" value="invisible"> 隱形不見</label>
-                <label><input type="radio" name="q2" value="black"> 黑色</label>
+                <label><input type="radio" name="q1" value="A"> A) 紅色字隱形，綠色和藍色字變黑</label>
+                <label><input type="radio" name="q1" value="B"> B) 綠色字隱形，紅色 and 藍色字變黑</label>
+                <label><input type="radio" name="q1" value="C"> C) 藍色字隱形，紅色和綠色字變黑</label>
             </div>
         </div>
 
         <div class="quiz-item" style="border-top: 3px solid var(--accent);">
-            <p>Q3. 請根據你在上方動態實驗區的操作發現，填入三個世界對應的三位數密碼：</p>
+            <p>Q2. 紀錄與統整：請下一位同學利用手持玻璃紙在上方畫布進行局部掃描，找出前一位同學到底把完美密碼藏在哪一個玻璃紙世界？正確密碼又是多少？</p>
             <div class="ans-field">
-                <label>1. 紅色玻璃紙下的密碼：</label>
-                <input type="text" id="ansRed" class="input-code" placeholder="???" maxlength="3">
+                <label>我猜測可以完美解密的玻璃紙是：</label>
+                <input type="text" id="ansGlass" class="input-code" placeholder="填紅/綠/藍">
             </div>
             <div class="ans-field">
-                <label>2. 綠色玻璃紙下的密碼：</label>
-                <input type="text" id="ansGreen" class="input-code" placeholder="???" maxlength="3">
-            </div>
-            <div class="ans-field">
-                <label>3. 藍色玻璃紙下的密碼：</label>
-                <input type="text" id="ansBlue" class="input-code" placeholder="???" maxlength="3">
+                <label>我破解出來的四位數密碼：</label>
+                <input type="text" id="ansDigits" class="input-code" placeholder="????" maxlength="4">
             </div>
         </div>
 
@@ -386,88 +376,85 @@
     };
     const segLabels = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
 
-    let isCustomMode = false; 
-    let targetRed = "468";
-    let targetGreen = "239";
-    let targetBlue = "602";
+    let chosenPerfectGlass = "red"; 
+    let currentSecretCode = "1234"; 
+    let currentHandGlass = 'red'; 
 
-    // 完美對應初始編碼矩陣
-    const teacherMatrix = [
-        { a: 'color-r', b: 'color-b', c: 'color-g', d: 'color-r', e: 'color-r', f: 'color-g', g: 'color-k' },
-        { a: 'color-k', b: 'color-r', c: 'color-k', d: 'color-k', e: 'color-b', f: 'color-g', g: 'color-b' },
-        { a: 'color-k', b: 'color-k', c: 'color-b', d: 'color-k', e: 'color-g', f: 'color-b', g: 'color-k' }
-    ];
-
-    let currentType = 'red';
     const filterGlass = document.getElementById('filterGlass');
     const glassLabel = document.getElementById('glassLabel');
     const paper = document.getElementById('paper');
+    const setupPanel = document.getElementById('setupPanel');
 
-    function toggleAdmin() {
-        const content = document.getElementById('adminContent');
-        content.style.display = (content.style.display === 'block') ? 'none' : 'block';
+    function generateRandomDigits() {
+        let randStr = "";
+        for(let i=0; i<4; i++) {
+            randStr += Math.floor(Math.random() * 10).toString();
+        }
+        document.getElementById('inputDigits').value = randStr;
     }
 
-    // 100% 純物理光學逆向顏色分配算法
-    function renderDigits() {
+    // 隱藏與顯示面板控制
+    function lockAndHidePanel() {
+        applyCustomSetup(); // 先確保當前輸入被應用生成
+        setupPanel.style.display = "none";
+        resetGlassPosition(); // 重置玻璃紙位置，防範作弊
+        alert("🔒 面板已鎖定並隱藏！快把平板交給下一位解密同學吧！");
+    }
+
+    function showSetupPanel() {
+        setupPanel.style.display = "block";
+    }
+
+    function resetGlassPosition() {
+        currentX = 0; currentY = 0;
+        filterGlass.style.transform = `translate3d(0px, 0px, 0)`;
+        checkCollision();
+    }
+
+    function applyCustomSetup() {
+        const inputVal = document.getElementById('inputDigits').value.trim();
+        const selectedGlass = document.getElementById('targetGlassType').value;
+
+        if (inputVal.length !== 4 || isNaN(inputVal)) {
+            alert("請輸入一組標準的【四位數阿拉伯數字】！");
+            return;
+        }
+
+        chosenPerfectGlass = selectedGlass;
+        currentSecretCode = inputVal;
+        renderPhysicalPaper();
+    }
+
+    function renderPhysicalPaper() {
         paper.innerHTML = '';
-        
-        for (let i = 0; i < 3; i++) {
+
+        for (let i = 0; i < 4; i++) {
             const digitBox = document.createElement('div');
             digitBox.className = 'digit-box';
 
+            const digitChar = currentSecretCode[i];
+            const pattern = fontMap[digitChar]; 
+
             for (let s = 0; s < 7; s++) {
-                let colorClass = 'color-w';
-                const label = segLabels[s];
+                const isSegmentNeedToLight = pattern[s]; 
+                let colorClass = 'color-w'; 
 
-                if (!isCustomMode) {
-    colorClass = teacherMatrix[i][label];
-} else {
-    // 【純物理光學逆向完美生成算法】
-    const rPattern = fontMap[targetRed[i] || '0'];
-    const gPattern = fontMap[targetGreen[i] || '0'];
-    const bPattern = fontMap[targetBlue[i] || '0'];
-
-    const activeR = rPattern[s]; // 紅色世界是否要顯現(1)或隱形(0)
-    const activeG = gPattern[s]; // 綠色世界是否要顯現(1)或隱形(0)
-    const activeB = bPattern[s]; // 藍色世界是否要顯現(1)或隱形(0)
-
-    // 狀態 1：三個宇宙都要顯現 -> 只能填【黑色】，在任何光下都是黑色
-    if (activeR && activeG && activeB) {
-        colorClass = 'color-k';
-    } 
-    // 狀態 2：紅綠要顯現、藍色要隱形 -> 填【藍色】，藍在藍光下隱形，紅綠光下變黑
-    else if (activeR && activeG && !activeB) {
-        colorClass = 'color-b';
-    } 
-    // 狀態 3：紅藍要顯現、綠色要隱形 -> 填【綠色】，綠在綠光下隱形，紅藍光下變黑
-    else if (activeR && !activeG && activeB) {
-        colorClass = 'color-g';
-    } 
-    // 狀態 4：綠藍要顯現、紅色要隱形 -> 填【紅色】，紅在紅光下隱形，綠藍光下變黑
-    else if (!activeR && activeG && activeB) {
-        colorClass = 'color-r';
-    }
-    // 狀態 5：只有紅色要顯現（綠藍隱形） -> 物理上矛盾！改用最接近的【藍色】作為干擾
-    else if (activeR && !activeG && !activeB) {
-        colorClass = 'color-b';
-    }
-    // 狀態 6：只有綠色要顯現（紅藍隱形） -> 物理上矛盾！改用最接近的【紅色】作為干擾
-    else if (!activeR && activeG && !activeB) {
-        colorClass = 'color-r';
-    }
-    // 狀態 7：只有藍色要顯現（紅綠隱形） -> 物理上矛盾！改用最接近的【綠色】作為干擾
-    else if (!activeR && !activeG && activeB) {
-        colorClass = 'color-g';
-    }
-    // 狀態 8：三個宇宙都不需要這根線段 -> 保持【白色不亮】
-    else {
-        colorClass = 'color-w';
-    }
-}
+                if (isSegmentNeedToLight === 1) {
+                    if (chosenPerfectGlass === 'red') {
+                        colorClass = (s % 2 === 0) ? 'color-g' : 'color-b';
+                    } else if (chosenPerfectGlass === 'green') {
+                        colorClass = (s % 2 === 0) ? 'color-r' : 'color-b';
+                    } else if (chosenPerfectGlass === 'blue') {
+                        colorClass = (s % 2 === 0) ? 'color-r' : 'color-g';
+                    }
+                } else {
+                    if (chosenPerfectGlass === 'red') colorClass = 'color-r';
+                    if (chosenPerfectGlass === 'green') colorClass = 'color-g';
+                    if (chosenPerfectGlass === 'blue') colorClass = 'color-b';
+                }
 
                 const segDiv = document.createElement('div');
-                segDiv.className = `segment seg-${label} ${colorClass}`;
+                segDiv.className = `segment seg-${segLabels[s]} ${colorClass}`;
                 segDiv.setAttribute('data-origin', colorClass);
                 digitBox.appendChild(segDiv);
             }
@@ -476,34 +463,8 @@
         checkCollision();
     }
 
-    function resetToTeacherMatrix() {
-        isCustomMode = false;
-        targetRed = "468"; targetGreen = "239"; targetBlue = "602";
-        document.getElementById('cfgRed').value = "468";
-        document.getElementById('cfgGreen').value = "239";
-        document.getElementById('cfgBlue').value = "602";
-        renderDigits();
-        alert("已成功還原！目前 100% 採用純物理濾光，且干擾色完美對應您的手繪矩陣圖。");
-    }
-
-    function applyCustomCodes() {
-        const rIn = document.getElementById('cfgRed').value.trim();
-        const gIn = document.getElementById('cfgGreen').value.trim();
-        const bIn = document.getElementById('cfgBlue').value.trim();
-
-        if(rIn.length !== 3 || gIn.length !== 3 || bIn.length !== 3 || isNaN(rIn) || isNaN(gIn) || isNaN(bIn)) {
-            alert("請輸入標準的【三位數】數字組合！");
-            return;
-        }
-
-        isCustomMode = true;
-        targetRed = rIn; targetGreen = gIn; targetBlue = bIn;
-        renderDigits();
-        alert("自訂密碼已套用物理配色！部分衝突線段會呈現真實的遮光殘缺現象。");
-    }
-
     function setGlassColor(color) {
-        currentType = color;
+        currentHandGlass = color;
         filterGlass.className = 'filter-glass filter-' + color;
         if(color === 'red') glassLabel.innerText = '🔴 紅色玻璃紙';
         if(color === 'green') glassLabel.innerText = '🟢 綠色玻璃紙';
@@ -511,7 +472,6 @@
         checkCollision(); 
     }
 
-    // 核心：純物理光學過濾算法（不作弊、只過濾顏色）
     function checkCollision() {
         const glassRect = filterGlass.getBoundingClientRect();
         const segments = document.querySelectorAll('.segment');
@@ -528,29 +488,18 @@
                                    glassRect.top > segRect.bottom);
 
             if (isOverlapped) {
-                // 100% 依據過濾片顏色與線段顏色進行物理渲染
                 seg.style.opacity = '1';
-                if (currentType === 'red') {
-                    if (originColor === 'color-r') {
-                        seg.style.opacity = '0.08'; // 紅色在紅光下隱形
-                    } else {
-                        seg.style.backgroundColor = '#1c1c1e'; // 其餘非紅顏色全部變黑
-                    }
-                } else if (currentType === 'green') {
-                    if (originColor === 'color-g') {
-                        seg.style.opacity = '0.08'; // 綠色在綠光下隱形
-                    } else {
-                        seg.style.backgroundColor = '#1c1c1e'; // 其餘變黑
-                    }
-                } else if (currentType === 'blue') {
-                    if (originColor === 'color-b') {
-                        seg.style.opacity = '0.08'; // 藍色在藍光下隱形
-                    } else {
-                        seg.style.backgroundColor = '#1c1c1e'; // 其餘變黑
-                    }
+                if (currentHandGlass === 'red') {
+                    if (originColor === 'color-r') seg.style.opacity = '0.08'; 
+                    else seg.style.backgroundColor = '#1c1c1e'; 
+                } else if (currentHandGlass === 'green') {
+                    if (originColor === 'color-g') seg.style.opacity = '0.08'; 
+                    else seg.style.backgroundColor = '#1c1c1e'; 
+                } else if (currentHandGlass === 'blue') {
+                    if (originColor === 'color-b') seg.style.opacity = '0.08'; 
+                    else seg.style.backgroundColor = '#1c1c1e'; 
                 }
             } else {
-                // 移開玻璃紙，立刻回復初始彩色印刷干擾色狀態
                 seg.style.opacity = '1';
                 if (originColor === 'color-r') seg.style.backgroundColor = '#ff3b30';
                 if (originColor === 'color-g') seg.style.backgroundColor = '#4cd964';
@@ -560,7 +509,6 @@
         });
     }
 
-    // 觸控與滑鼠動態拖曳
     let isDragging = false;
     let currentX = 0, currentY = 0, initialX = 0, initialY = 0;
 
@@ -591,41 +539,34 @@
         checkCollision();
     }
 
-    // 初始化加載
-    renderDigits();
+    applyCustomSetup();
 
-    // 學習單驗證
     function checkAll() {
         const q1 = document.querySelector('input[name="q1"]:checked');
-        const q2 = document.querySelector('input[name="q2"]:checked');
-        
-        if (!q1 || !q2) {
-            alert('請先填寫完觀念測驗題再提交喔！');
+        if (!q1) {
+            alert('請先點選 Q1 的光學原理選擇題！');
             return;
         }
 
-        let preQuizCorrect = (q1.value === 'green' && q2.value === 'black');
+        let q1Correct = (q1.value === 'B');
 
-        const rAns = document.getElementById('ansRed').value.trim();
-        const gAns = document.getElementById('ansGreen').value.trim();
-        const bAns = document.getElementById('ansBlue').value.trim();
+        const ansG = document.getElementById('ansGlass').value.trim();
+        const ansD = document.getElementById('ansDigits').value.trim();
 
-        let rCorrect = (rAns === targetRed);
-        let gCorrect = (gAns === targetGreen);
-        let bCorrect = (bAns === targetBlue);
+        let glassNameMapping = { 'red': '紅', 'green': '綠', 'blue': '藍' };
+        let expectedGlassName = glassNameMapping[chosenPerfectGlass];
+
+        let q2Correct = (ansG.includes(expectedGlassName) && ansD === currentSecretCode);
 
         const finalScore = document.getElementById('finalScore');
-
-        if (preQuizCorrect && rCorrect && gCorrect && bCorrect) {
+        if (q1Correct && q2Correct) {
             finalScore.className = "result correct";
-            finalScore.innerHTML = `🎉 恭喜完全正確！\n前導原理觀念滿分，且成功透過純物理濾光破解密碼！\n當前答案為：紅(${targetRed}) / 綠(${targetGreen}) / 藍(${targetBlue})`;
+            finalScore.innerHTML = `🎉 恭喜成功破解密碼！探究觀念完全正確！\n你完美找出了前一位同學隱藏在【${expectedGlassName}色玻璃紙世界】下的秘密代碼：${currentSecretCode}`;
         } else {
             finalScore.className = "result wrong";
-            let msg = "再觀察看看，有些答案不對喔：\n";
-            if (!preQuizCorrect) msg += "• 觀念題 Q1 或 Q2 有誤，請重新確認前導知識的濾光規則。\n";
-            if (!rCorrect && preQuizCorrect) msg += "• 紅色玻璃紙下的密碼輸入不正確。\n";
-            if (!gCorrect && preQuizCorrect) msg += "• 綠色玻璃紙下的密碼輸入不正確。\n";
-            if (!bCorrect && preQuizCorrect) msg += "• 藍色玻璃紙下的密碼輸入不正確。\n";
+            let msg = "解密失敗，答案有些小錯誤喔：\n";
+            if(!q1Correct) msg += "• Q1 的原理觀念題選擇錯誤。\n";
+            if(!q2Correct) msg += "• Q2 猜測的玻璃紙世界或密碼數字不正確，快換色再掃描看看！";
             finalScore.innerHTML = msg;
         }
     }
